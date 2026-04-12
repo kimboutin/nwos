@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support Us — New Ways of Seeing</title>
+  <meta name="description" content="Support New Ways of Seeing — the festival at the intersection of art, science, technology and culture.">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .support-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 60px;
+      padding: 130px 30px 100px;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .support-title {
+      font-family: 'Francesco', sans-serif;
+      font-weight: 400;
+      font-size: clamp(48px, 8vw, 90px);
+      line-height: 0.95;
+      letter-spacing: -2px;
+      color: #ffffff;
+    }
+    .support-intro {
+      font-family: 'Supleix', sans-serif;
+      font-weight: 300;
+      font-size: 20px;
+      line-height: 28px;
+      color: rgba(255,255,255,0.8);
+      max-width: 600px;
+      white-space: pre-line;
+    }
+    .support-ways {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      width: 100%;
+    }
+    .support-way {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      width: 100%;
+    }
+    .support-way:last-child { border-bottom: none; }
+    .support-way-title {
+      font-family: 'Francesco', sans-serif;
+      font-weight: 400;
+      font-size: 32px;
+      line-height: 1;
+      color: #ffffff;
+    }
+    .support-way-desc {
+      font-family: 'Supleix', sans-serif;
+      font-weight: 300;
+      font-size: 18px;
+      line-height: 26px;
+      color: rgba(255,255,255,0.75);
+      white-space: pre-line;
+      max-width: 540px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" style="background:transparent;">
+    <a href="/" class="pill pill-white">Back</a>
+    <div></div>
+  </nav>
+
+  <div class="support-page">
+    <h1 class="support-title" id="support-title">Support Us</h1>
+    <p class="support-intro" id="support-intro"></p>
+    <div class="support-ways" id="support-ways"></div>
+  </div>
+
+  <script>
+    const PROJECT_ID = '2bp4wflj';
+    const DATASET    = 'production';
+    const API_BASE   = `https://${PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${DATASET}`;
+
+    async function init() {
+      try {
+        const res  = await fetch(`${API_BASE}?query=${encodeURIComponent('*[_type == "supportPage" && _id == "supportPage"][0]{ title, intro, partnershipEmail, ways[] { title, description, ctaLabel, ctaUrl } }')}`);
+        const page = (await res.json()).result;
+        if (!page) return;
+
+        if (page.title) {
+          document.getElementById('support-title').textContent = page.title;
+          document.title = `${page.title} — New Ways of Seeing`;
+        }
+        if (page.intro) document.getElementById('support-intro').textContent = page.intro;
+
+        const waysEl = document.getElementById('support-ways');
+        if (page.ways && page.ways.length && waysEl) {
+          page.ways.forEach(way => {
+            const div = document.createElement('div');
+            div.className = 'support-way';
+
+            const title = document.createElement('h2');
+            title.className   = 'support-way-title';
+            title.textContent = way.title || '';
+            div.appendChild(title);
+
+            if (way.description) {
+              const desc = document.createElement('p');
+              desc.className   = 'support-way-desc';
+              desc.textContent = way.description;
+              div.appendChild(desc);
+            }
+
+            if (way.ctaUrl && way.ctaLabel) {
+              const cta = document.createElement('a');
+              cta.className  = 'register-cta';
+              cta.href       = way.ctaUrl;
+              cta.target     = '_blank';
+              cta.rel        = 'noopener noreferrer';
+              cta.textContent = way.ctaLabel;
+              cta.style.marginTop = '8px';
+              cta.style.alignSelf = 'flex-start';
+              div.appendChild(cta);
+            }
+
+            waysEl.appendChild(div);
+          });
+        }
+      } catch (err) {
+        console.warn('Could not load support page:', err.message);
+      }
+    }
+    init();
+  </script>
+</body>
+</html>

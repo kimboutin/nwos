@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — New Ways of Seeing</title>
+  <meta name="description" content="Contact New Ways of Seeing — the festival at the intersection of art, science, technology and culture.">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .contact-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 50px;
+      padding: 130px 30px 100px;
+      max-width: 700px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .contact-title {
+      font-family: 'Francesco', sans-serif;
+      font-weight: 400;
+      font-size: clamp(48px, 8vw, 90px);
+      line-height: 0.95;
+      letter-spacing: -2px;
+      color: #ffffff;
+    }
+    .contact-intro {
+      font-family: 'Supleix', sans-serif;
+      font-weight: 300;
+      font-size: 20px;
+      line-height: 28px;
+      color: rgba(255,255,255,0.8);
+      white-space: pre-line;
+    }
+    .contact-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .contact-label {
+      font-family: 'Supleix', sans-serif;
+      font-weight: 300;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+    .contact-value {
+      font-family: 'Francesco', sans-serif;
+      font-weight: 400;
+      font-size: 28px;
+      color: #ffffff;
+      text-decoration: none;
+    }
+    .contact-value:hover { opacity: 0.7; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" style="background:transparent;">
+    <a href="/" class="pill pill-white">Back</a>
+    <div></div>
+  </nav>
+
+  <div class="contact-page">
+    <h1 class="contact-title" id="contact-title">Contact</h1>
+    <p class="contact-intro"   id="contact-intro"></p>
+    <div id="contact-details"></div>
+  </div>
+
+  <script>
+    const PROJECT_ID = '2bp4wflj';
+    const DATASET    = 'production';
+    const API_BASE   = `https://${PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${DATASET}`;
+
+    async function init() {
+      try {
+        const res  = await fetch(`${API_BASE}?query=${encodeURIComponent('*[_type == "contactPage" && _id == "contactPage"][0]{ title, intro, generalEmail, pressEmail }')}`);
+        const page = (await res.json()).result;
+        if (!page) return;
+
+        if (page.title) {
+          document.getElementById('contact-title').textContent = page.title;
+          document.title = `${page.title} — New Ways of Seeing`;
+        }
+        if (page.intro) document.getElementById('contact-intro').textContent = page.intro;
+
+        const details = document.getElementById('contact-details');
+        const rows = [
+          { label: 'General enquiries', value: page.generalEmail, href: `mailto:${page.generalEmail}` },
+          { label: 'Press',             value: page.pressEmail,   href: `mailto:${page.pressEmail}` },
+        ];
+        rows.forEach(({ label, value, href }) => {
+          if (!value) return;
+          const row = document.createElement('div');
+          row.className = 'contact-row';
+          const lbl = document.createElement('span');
+          lbl.className   = 'contact-label';
+          lbl.textContent = label;
+          const a = document.createElement('a');
+          a.className   = 'contact-value';
+          a.href        = href;
+          a.textContent = value;
+          row.appendChild(lbl);
+          row.appendChild(a);
+          details.appendChild(row);
+        });
+      } catch (err) {
+        console.warn('Could not load contact page:', err.message);
+      }
+    }
+    init();
+  </script>
+</body>
+</html>

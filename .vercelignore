@@ -1,0 +1,20 @@
+# Sanity studio source (studio is deployed separately via `sanity deploy`)
+sanity/
+sanity.cli.ts
+sanity.config.ts
+
+# Next.js scaffold (not used — site is vanilla HTML/CSS/JS)
+app/
+next.config.ts
+tsconfig.json
+tsconfig.tsbuildinfo
+eslint.config.mjs
+
+# Tooling
+node_modules/
+.claude/
+CLAUDE.md
+AGENTS.md
+README.md
+package.json
+package-lock.json
