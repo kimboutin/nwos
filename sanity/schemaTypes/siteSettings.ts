@@ -66,6 +66,41 @@ export const siteSettings = defineType({
       title: 'Support Us URL',
       type: 'url',
     }),
+
+    // ── SEO & Metadata ────────────────────────────────────────────────────────
+    defineField({
+      name: 'metaTitle',
+      title: 'Page Title',
+      type: 'string',
+      description: 'Browser tab title and og:title. Defaults to "New Ways of Seeing" if left empty.',
+      group: 'seo',
+    }),
+    defineField({
+      name: 'metaDescription',
+      title: 'Meta Description',
+      type: 'text',
+      rows: 3,
+      description: 'Used for search results and social share previews. 140–160 characters recommended.',
+      group: 'seo',
+    }),
+    defineField({
+      name: 'ogImage',
+      title: 'Social Share Image',
+      type: 'image',
+      options: { hotspot: true },
+      description: 'Image shown when the site is shared on social media. Recommended: 1200 × 630 px.',
+      group: 'seo',
+    }),
+    defineField({
+      name: 'favicon',
+      title: 'Favicon',
+      type: 'image',
+      description: 'Browser tab icon. Recommended: 512 × 512 px PNG.',
+      group: 'seo',
+    }),
+  ],
+  groups: [
+    { name: 'seo', title: 'SEO & Metadata' },
   ],
   preview: {
     select: { title: 'festivalName' },

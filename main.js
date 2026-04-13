@@ -622,6 +622,55 @@ async function renderEdition2026Content(container) {
   }
 }
 
+/** Set or create a <meta> tag by name or property. */
+function setMetaTag(nameOrProp, content) {
+  if (!content) return;
+  const isOg = nameOrProp.startsWith('og:') || nameOrProp.startsWith('twitter:');
+  const attr  = isOg ? 'property' : 'name';
+  let el = document.querySelector(`meta[${attr}="${nameOrProp}"]`);
+  if (!el) {
+    el = document.createElement('meta');
+    el.setAttribute(attr, nameOrProp);
+    document.head.appendChild(el);
+  }
+  el.setAttribute('content', content);
+}
+
+/** Apply CMS-driven metadata to <head>. */
+function applyMeta(settings) {
+  if (!settings) return;
+  const { metaTitle, metaDescription, ogImageUrl, faviconUrl } = settings;
+
+  const title = metaTitle || 'New Ways of Seeing';
+  document.title = title;
+  setMetaTag('og:title',          title);
+  setMetaTag('twitter:title',     title);
+
+  if (metaDescription) {
+    setMetaTag('description',       metaDescription);
+    setMetaTag('og:description',    metaDescription);
+    setMetaTag('twitter:description', metaDescription);
+  }
+
+  if (ogImageUrl) {
+    // Request a well-sized OG image from the Sanity CDN
+    const imgUrl = sanityImgUrl(ogImageUrl, { w: 1200, h: 630, q: 85 });
+    setMetaTag('og:image',       imgUrl);
+    setMetaTag('twitter:image',  imgUrl);
+    setMetaTag('twitter:card',   'summary_large_image');
+  }
+
+  if (faviconUrl) {
+    let link = document.querySelector("link[rel='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.href = sanityImgUrl(faviconUrl, { w: 512, q: 90 });
+  }
+}
+
 /** Wire footer / nav links from siteSettings. */
 function applySettings(settings) {
   if (!settings) return;
@@ -778,7 +827,10 @@ async function init() {
           instagramUrl, contactEmail, mailingListUrl, supportUrl,
           backdropType,
           "backdropVideoUrl": backdropVideo.asset->url,
-          "backdropImageUrl": backdropImage.asset->url
+          "backdropImageUrl": backdropImage.asset->url,
+          metaTitle, metaDescription,
+          "ogImageUrl": ogImage.asset->url,
+          "faviconUrl": favicon.asset->url
         }
       `),
 
@@ -812,8 +864,9 @@ async function init() {
     // Themes
     renderThemes(themes);
 
-    // Links
+    // Links + metadata
     applySettings(settings);
+    applyMeta(settings);
 
     // Intercept support/contact/edition-2026 nav + footer links → open as modal
     document.querySelectorAll('a[href="/support/"]').forEach(el => {
