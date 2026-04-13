@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { richTextBlock } from './shared'
 
 export const festivalTheme = defineType({
   name: 'festivalTheme',
@@ -22,13 +23,14 @@ export const festivalTheme = defineType({
       title: 'Video Loop',
       type: 'file',
       options: { accept: 'video/*' },
-      description: 'Square looping video (MP4). Will play silently on the homepage.',
+      description: 'Looping video (MP4). Will play silently on the homepage.',
     }),
     defineField({
       name: 'description',
       title: 'Short Description',
-      type: 'text',
-      rows: 3,
+      type: 'array',
+      of: [richTextBlock],
+      description: 'Supports italic, bold, and links.',
     }),
     defineField({
       name: 'participants',

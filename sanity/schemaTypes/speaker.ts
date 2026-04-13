@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { richTextBlock } from './shared'
 
 export const speaker = defineType({
   name: 'speaker',
@@ -33,8 +34,9 @@ export const speaker = defineType({
     defineField({
       name: 'bio',
       title: 'Biography',
-      type: 'text',
-      rows: 6,
+      type: 'array',
+      of: [richTextBlock],
+      description: 'Supports italic, bold, and links.',
     }),
     defineField({
       name: 'workImages',

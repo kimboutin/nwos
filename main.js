@@ -18,6 +18,54 @@ async function sanityQuery(groq, params = {}) {
   return (await res.json()).result;
 }
 
+// ── Portable Text renderer ────────────────────────────────────────────────────
+
+/**
+ * Converts Sanity Portable Text (array of blocks) to an HTML string.
+ * Handles: em, strong, link annotations.
+ * Falls back gracefully if passed a plain string (legacy content).
+ */
+function portableTextToHtml(value) {
+  if (!value) return '';
+  // Legacy plain string fallback
+  if (typeof value === 'string') {
+    return value
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .split('\n').map(l => `<p>${l}</p>`).join('');
+  }
+  if (!Array.isArray(value)) return '';
+
+  return value.map(block => {
+    if (block._type !== 'block') return '';
+    const defs = block.markDefs || [];
+    const children = (block.children || []).map(span => {
+      let text = (span.text || '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      // Apply marks inside-out (last mark = outermost wrapper)
+      (span.marks || []).slice().reverse().forEach(mark => {
+        if (mark === 'em')     { text = `<em>${text}</em>`; return; }
+        if (mark === 'strong') { text = `<strong>${text}</strong>`; return; }
+        const def = defs.find(d => d._key === mark);
+        if (def?._type === 'link') {
+          const target = def.blank !== false
+            ? ' target="_blank" rel="noopener noreferrer"' : '';
+          text = `<a href="${def.href || ''}"${target}>${text}</a>`;
+        }
+      });
+      return text;
+    }).join('');
+    return `<p>${children}</p>`;
+  }).join('');
+}
+
+/** Set element innerHTML from portable text, or hide if empty. */
+function setRichText(el, value) {
+  if (!el) return;
+  const html = portableTextToHtml(value);
+  if (!html) { el.style.display = 'none'; return; }
+  el.innerHTML = html;
+}
+
 // ── Sanity image URL helper ───────────────────────────────────────────────────
 
 /**
@@ -46,14 +94,10 @@ function setText(id, value) {
   if (el) el.textContent = value;
 }
 
-/** Set a text field, italicising every occurrence of "New Ways of Seeing". */
+/** Set rich text — for portable text arrays or legacy plain strings. */
 function setIntroText(id, value) {
-  if (!value) return;
   const el = document.getElementById(id);
-  if (!el) return;
-  const escaped = value
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  el.innerHTML = escaped.replace(/New Ways of Seeing/g, '<em>New Ways of Seeing</em>');
+  setRichText(el, value);
 }
 
 /** Build the auto-scrolling gallery slideshow. */
@@ -344,7 +388,7 @@ async function openSpeakerModal(slug) {
 
     const bioEl = document.getElementById('sm-bio');
     if (bioEl && speaker.bio) {
-      bioEl.textContent = speaker.bio;
+      bioEl.innerHTML = portableTextToHtml(speaker.bio);
       bioEl.style.display = '';
     }
 
@@ -391,9 +435,9 @@ function renderThemes(themes) {
     }
 
     if (theme.description) {
-      const desc = document.createElement('p');
-      desc.className   = 'theme-description';
-      desc.textContent = theme.description;
+      const desc = document.createElement('div');
+      desc.className  = 'theme-description rich-text';
+      desc.innerHTML  = portableTextToHtml(theme.description);
       card.appendChild(desc);
     }
 
@@ -500,9 +544,9 @@ async function renderSupportContent(container) {
   container.appendChild(titleEl);
 
   if (page && page.intro) {
-    const intro = document.createElement('p');
-    intro.className   = 'page-modal-intro';
-    intro.textContent = page.intro;
+    const intro = document.createElement('div');
+    intro.className  = 'page-modal-intro rich-text';
+    intro.innerHTML  = portableTextToHtml(page.intro);
     container.appendChild(intro);
   }
 
@@ -517,9 +561,9 @@ async function renderSupportContent(container) {
       t.textContent = way.title || '';
       div.appendChild(t);
       if (way.description) {
-        const d = document.createElement('p');
-        d.className   = 'support-way-desc';
-        d.textContent = way.description;
+        const d = document.createElement('div');
+        d.className  = 'support-way-desc rich-text';
+        d.innerHTML  = portableTextToHtml(way.description);
         div.appendChild(d);
       }
       if (way.ctaUrl && way.ctaLabel) {
@@ -536,6 +580,35 @@ async function renderSupportContent(container) {
       waysEl.appendChild(div);
     });
     container.appendChild(waysEl);
+  }
+
+  if (page && page.partners && page.partners.length) {
+    const partnersEl = document.createElement('div');
+    partnersEl.className = 'support-partners';
+    page.partners.forEach(partner => {
+      const div = document.createElement('div');
+      div.className = 'support-partner';
+      if (partner.role) {
+        const role = document.createElement('p');
+        role.className   = 'support-partner-role';
+        role.textContent = partner.role;
+        div.appendChild(role);
+      }
+      if (partner.name) {
+        const name = document.createElement('h3');
+        name.className   = 'support-partner-name';
+        name.textContent = partner.name;
+        div.appendChild(name);
+      }
+      if (partner.description) {
+        const desc = document.createElement('div');
+        desc.className  = 'support-partner-desc rich-text';
+        desc.innerHTML  = portableTextToHtml(partner.description);
+        div.appendChild(desc);
+      }
+      partnersEl.appendChild(div);
+    });
+    container.appendChild(partnersEl);
   }
 }
 
@@ -846,8 +919,8 @@ async function init() {
     // Who We Are
     if (whoWeAre) {
       setIntroText('intro-text', whoWeAre.introText);
-      setText('participant-quote', whoWeAre.participantQuote);
-      setText('who-we-are-text', whoWeAre.aboutText);
+      setRichText(document.getElementById('participant-quote'), whoWeAre.participantQuote);
+      setRichText(document.getElementById('who-we-are-text'),   whoWeAre.aboutText);
       renderGalleryImages(whoWeAre.galleryImages);
     }
 

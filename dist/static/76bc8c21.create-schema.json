@@ -1,0 +1,769 @@
+[
+  {
+    "fields": [
+      {
+        "rows": 5,
+        "description": "Large opening text. Any occurrence of \"New Ways of Seeing\" will be italicised automatically on the site.",
+        "name": "introText",
+        "type": "text",
+        "title": "Intro Paragraph"
+      },
+      {
+        "description": "Displayed in the photo collage. Include the quotation marks.",
+        "name": "participantQuote",
+        "type": "string"
+      },
+      {
+        "rows": 4,
+        "description": "Shorter paragraph below the collage.",
+        "name": "aboutText",
+        "type": "text",
+        "title": "About Paragraph"
+      },
+      {
+        "description": "Photos for the auto-scrolling slideshow. Add as many as you like.",
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "name": "alt",
+                "type": "string",
+                "title": "Alt text"
+              }
+            ],
+            "type": "image"
+          }
+        ],
+        "name": "galleryImages",
+        "type": "array"
+      }
+    ],
+    "name": "whoWeAre",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 2000
+              }
+            ]
+          }
+        ],
+        "name": "year",
+        "type": "number"
+      },
+      {
+        "name": "startDate",
+        "type": "date"
+      },
+      {
+        "name": "endDate",
+        "type": "date"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Upcoming",
+              "value": "upcoming"
+            },
+            {
+              "title": "Past",
+              "value": "past"
+            }
+          ],
+          "layout": "radio"
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "upcoming",
+                  "past"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "status",
+        "type": "string"
+      },
+      {
+        "rows": 4,
+        "description": "Paragraph displayed below the aftermovie.",
+        "name": "overviewDescription",
+        "type": "text"
+      },
+      {
+        "options": {
+          "accept": "video/*"
+        },
+        "description": "Upload the aftermovie video file (MP4 recommended).",
+        "name": "aftermovie",
+        "type": "file"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "description": "Thumbnail shown before the user presses play.",
+        "name": "aftermoviePoster",
+        "type": "image"
+      }
+    ],
+    "name": "edition",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "name",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "description": "Auto-generated from name — used for the speaker profile URL.",
+        "name": "slug",
+        "type": "slug",
+        "title": "URL Slug"
+      },
+      {
+        "name": "role",
+        "type": "string",
+        "title": "Job Title"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "photo",
+        "type": "image",
+        "title": "Profile Photo"
+      },
+      {
+        "rows": 6,
+        "name": "bio",
+        "type": "text",
+        "title": "Biography"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 12
+              }
+            ]
+          }
+        ],
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "type": "image"
+          }
+        ],
+        "name": "workImages",
+        "type": "array",
+        "title": "Images of Work"
+      }
+    ],
+    "name": "speaker",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "description": "1 = first. Controls the left-to-right order on the homepage.",
+        "name": "order",
+        "type": "number",
+        "title": "Display Order"
+      },
+      {
+        "options": {
+          "accept": "video/*"
+        },
+        "description": "Square looping video (MP4). Will play silently on the homepage.",
+        "name": "videoLoop",
+        "type": "file"
+      },
+      {
+        "rows": 3,
+        "name": "description",
+        "type": "text",
+        "title": "Short Description"
+      },
+      {
+        "description": "Names of participants for this theme (one per entry).",
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "participants",
+        "type": "array"
+      }
+    ],
+    "name": "festivalTheme",
+    "type": "document",
+    "title": "Theme"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "address",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "name": "url",
+        "type": "url",
+        "title": "Website URL"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "photo",
+        "type": "image"
+      }
+    ],
+    "name": "venue",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "logo",
+        "type": "image"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "name": "url",
+        "type": "url",
+        "title": "Website URL"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Main",
+              "value": "main"
+            },
+            {
+              "title": "Support",
+              "value": "support"
+            },
+            {
+              "title": "Media",
+              "value": "media"
+            }
+          ],
+          "layout": "radio"
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "main",
+                  "support",
+                  "media"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "tier",
+        "type": "string"
+      }
+    ],
+    "name": "partner",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "festivalName",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Video (looping)",
+              "value": "video"
+            },
+            {
+              "title": "Image",
+              "value": "image"
+            }
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "video",
+        "description": "Choose whether the full-bleed background is a looping video or a still image.",
+        "name": "backdropType",
+        "type": "string"
+      },
+      {
+        "options": {
+          "accept": "video/*"
+        },
+        "description": "Looping background video (MP4 recommended). Leave empty to use the default loop.",
+        "hidden": "conditional",
+        "name": "backdropVideo",
+        "type": "file"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "description": "Full-bleed background image.",
+        "hidden": "conditional",
+        "name": "backdropImage",
+        "type": "image"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "name": "instagramUrl",
+        "type": "url",
+        "title": "Instagram URL"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "name": "mailingListUrl",
+        "type": "url",
+        "title": "Mailing List URL"
+      },
+      {
+        "name": "contactEmail",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "name": "supportUrl",
+        "type": "url",
+        "title": "Support Us URL"
+      },
+      {
+        "description": "Browser tab title and og:title. Defaults to \"New Ways of Seeing\" if left empty.",
+        "name": "metaTitle",
+        "type": "string",
+        "title": "Page Title"
+      },
+      {
+        "rows": 3,
+        "description": "Used for search results and social share previews. 140–160 characters recommended.",
+        "name": "metaDescription",
+        "type": "text"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "description": "Image shown when the site is shared on social media. Recommended: 1200 × 630 px.",
+        "name": "ogImage",
+        "type": "image",
+        "title": "Social Share Image"
+      },
+      {
+        "description": "Browser tab icon. Recommended: 512 × 512 px PNG.",
+        "name": "favicon",
+        "type": "image"
+      }
+    ],
+    "name": "siteSettings",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "description": "Main heading on the 2026 page.",
+        "name": "heroTitle",
+        "type": "string"
+      },
+      {
+        "name": "heroSubtitle",
+        "type": "string"
+      },
+      {
+        "rows": 4,
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "description": "e.g. \"October 2026\"",
+        "name": "date",
+        "type": "string"
+      },
+      {
+        "name": "venue",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "Link to your Typeform, Tally, or other registration form.",
+        "name": "registrationUrl",
+        "type": "url",
+        "title": "Registration Form URL"
+      }
+    ],
+    "name": "edition2026Page",
+    "type": "document",
+    "title": "2026 Edition Page"
+  },
+  {
+    "fields": [
+      {
+        "name": "title",
+        "type": "string",
+        "title": "Page Title"
+      },
+      {
+        "rows": 4,
+        "name": "intro",
+        "type": "text",
+        "title": "Introduction"
+      },
+      {
+        "name": "partnershipEmail",
+        "type": "string",
+        "title": "Partnership Contact Email"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "name": "title",
+                "type": "string"
+              },
+              {
+                "rows": 3,
+                "name": "description",
+                "type": "text"
+              },
+              {
+                "name": "ctaLabel",
+                "type": "string",
+                "title": "Button Label"
+              },
+              {
+                "validation": [
+                  {
+                    "level": "error",
+                    "rules": [
+                      {
+                        "flag": "uri",
+                        "constraint": {
+                          "options": {
+                            "scheme": [
+                              "/^http$/",
+                              "/^https$/"
+                            ],
+                            "allowRelative": false,
+                            "relativeOnly": false,
+                            "allowCredentials": false
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "name": "ctaUrl",
+                "type": "url",
+                "title": "Button URL"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "ways",
+        "type": "array",
+        "title": "Ways to Support"
+      }
+    ],
+    "name": "supportPage",
+    "type": "document",
+    "title": "Support Us Page"
+  },
+  {
+    "fields": [
+      {
+        "name": "title",
+        "type": "string",
+        "title": "Page Title"
+      },
+      {
+        "rows": 3,
+        "name": "intro",
+        "type": "text",
+        "title": "Introduction"
+      },
+      {
+        "name": "generalEmail",
+        "type": "string",
+        "title": "General Contact Email"
+      },
+      {
+        "name": "pressEmail",
+        "type": "string",
+        "title": "Press Inquiries Email"
+      }
+    ],
+    "name": "contactPage",
+    "type": "document"
+  }
+]

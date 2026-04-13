@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { richTextBlock } from './shared'
 
 export const whoWeAre = defineType({
   name: 'whoWeAre',
@@ -8,28 +9,29 @@ export const whoWeAre = defineType({
     defineField({
       name: 'introText',
       title: 'Intro Paragraph',
-      type: 'text',
-      rows: 5,
-      description: 'Large opening text. Any occurrence of "New Ways of Seeing" will be italicised automatically on the site.',
+      type: 'array',
+      of: [richTextBlock],
+      description: 'Large opening text. Supports italic, bold, and links.',
     }),
     defineField({
       name: 'participantQuote',
       title: 'Participant Quote',
-      type: 'string',
-      description: 'Displayed in the photo collage. Include the quotation marks.',
+      type: 'array',
+      of: [richTextBlock],
+      description: 'Displayed in the quote section. Include quotation marks in the text.',
     }),
     defineField({
       name: 'aboutText',
       title: 'About Paragraph',
-      type: 'text',
-      rows: 4,
+      type: 'array',
+      of: [richTextBlock],
       description: 'Shorter paragraph below the collage.',
     }),
     defineField({
       name: 'galleryImages',
       title: 'Gallery Images',
       type: 'array',
-      description: 'Photos for the auto-scrolling slideshow. Add as many as you like.',
+      description: 'Photos for the auto-scrolling slideshow.',
       of: [
         {
           type: 'image',
@@ -43,8 +45,8 @@ export const whoWeAre = defineType({
   ],
   preview: {
     select: { title: 'introText' },
-    prepare({ title }) {
-      return { title: 'Who We Are', subtitle: title?.slice(0, 80) ?? '' }
+    prepare() {
+      return { title: 'Who We Are' }
     },
   },
 })

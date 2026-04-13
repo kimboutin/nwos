@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { richTextBlock } from './shared'
 
 export const contactPage = defineType({
   name: 'contactPage',
@@ -13,8 +14,9 @@ export const contactPage = defineType({
     defineField({
       name: 'intro',
       title: 'Introduction',
-      type: 'text',
-      rows: 3,
+      type: 'array',
+      of: [richTextBlock],
+      description: 'Supports italic, bold, and links.',
     }),
     defineField({
       name: 'generalEmail',

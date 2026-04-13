@@ -64,6 +64,16 @@ export const structure: StructureResolver = (S) =>
 
       S.divider(),
 
+      // ── About Page ──────────────────────────────────────────
+      S.listItem()
+        .title('About Page')
+        .child(
+          S.document()
+            .schemaType('aboutPage')
+            .documentId('aboutPage')
+            .title('About Page')
+        ),
+
       // ── Support Us Page ─────────────────────────────────────
       S.listItem()
         .title('Support Us Page')
