@@ -399,7 +399,7 @@ async function openSpeakerModal(slug) {
         const wrap = document.createElement('div');
         wrap.className = 'speaker-work-img'; // natural ratio — no forced aspect-ratio
         const img = document.createElement('img');
-        img.src = sanityImgUrl(imgData.url, { h: 600, q: 80 }); img.alt = imgData.alt || ''; img.loading = 'lazy';
+        img.src = sanityImgUrl(imgData.url, { w: 1200, q: 80 }); img.alt = imgData.alt || ''; img.loading = 'lazy';
         wrap.appendChild(img);
         worksEl.appendChild(wrap);
       });
@@ -787,6 +787,7 @@ function initMobileMenu() {
   inner.className = 'menu-overlay-inner';
   overlay.appendChild(inner);
 
+  const urlMap = { support: '/support/', contact: '/contact/', edition2026: '/edition-2026/' };
   const ITEMS = [
     { label: 'who we are',            action: 'scroll', target: '#who' },
     { label: '2025 edition overview', action: 'scroll', target: '#overview' },
@@ -798,10 +799,12 @@ function initMobileMenu() {
   ];
 
   ITEMS.forEach(({ label, action, target }) => {
-    const el = document.createElement(action === 'link' ? 'a' : 'button');
+    const el = document.createElement('a');
     el.className   = 'menu-overlay-link';
     el.textContent = label;
-    if (action === 'link') { el.href = target; el.target = '_blank'; el.rel = 'noopener noreferrer'; }
+    if (action === 'link')   { el.href = target; el.target = '_blank'; el.rel = 'noopener noreferrer'; }
+    if (action === 'scroll') { el.href = target; }
+    if (action === 'modal')  { el.href = urlMap[target] || '/'; }
     el.addEventListener('click', e => {
       if (action === 'link') return; // let it open naturally
       e.preventDefault();

@@ -31,6 +31,55 @@
     gtag('js', new Date());
     gtag('config', 'G-K87DQL6JHE');
   </script>
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "New Ways of Seeing",
+    "url": "https://newwaysofseeing.com",
+    "description": "A French non-profit festival at the intersection of art, science, technology and culture.",
+    "foundingDate": "2025",
+    "location": {
+      "@type": "Place",
+      "name": "Paris, France",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Paris",
+        "addressCountry": "FR"
+      }
+    },
+    "sameAs": []
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "New Ways of Seeing — Edition 2",
+    "description": "A festival at the intersection of art, science, technology and culture. Edition 2, October 2026, Paris.",
+    "startDate": "2026-10-01",
+    "endDate": "2026-10-31",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "location": {
+      "@type": "Place",
+      "name": "Paris",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Paris",
+        "addressCountry": "FR"
+      }
+    },
+    "organizer": {
+      "@type": "Organization",
+      "name": "New Ways of Seeing",
+      "url": "https://newwaysofseeing.com"
+    },
+    "url": "https://newwaysofseeing.com/edition-2026/"
+  }
+  </script>
 </head>
 <body>
 
@@ -67,9 +116,10 @@
 
       <!-- Logo: horizontal on desktop, vertical on mobile -->
       <div class="logo-wrap">
+        <h1 class="sr-only">New Ways of Seeing</h1>
         <picture>
           <source media="(max-width: 767px)" srcset="public/images/logo-vertical.svg">
-          <img src="public/images/logo-horizontal.svg" alt="New Ways of Seeing">
+          <img src="public/images/logo-horizontal.svg" alt="New Ways of Seeing" aria-hidden="true">
         </picture>
       </div>
     </header>
